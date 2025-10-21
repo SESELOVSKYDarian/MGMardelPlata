@@ -1,15 +1,14 @@
 {
 "name": "mg-clone",
 "private": true,
-"packageManager": "pnpm@9.10.0",
-"workspaces": ["apps/*", "services/*", "packages/*"],
+  "packageManager": "pnpm@9.10.0",
 "scripts": {
 "dev": "concurrently -n web,admin,api -c blue,magenta,green \"pnpm --filter web dev\" \"pnpm --filter admin dev\" \"pnpm --filter api dev\"",
-"db:push": "pnpm --filter api prisma db push",
-"db:seed": "pnpm --filter api prisma db seed",
+"db:push": "pnpm --filter api run prisma db push",
+"db:seed": "pnpm --filter api run prisma db seed",
 "build": "pnpm -r build",
-"start": "pnpm --filter api start & pnpm --filter web start & pnpm --filter admin start"
-},
+    "start": "concurrently -n api,web,admin -c green,blue,magenta \"pnpm --filter api start\" \"pnpm --filter web start\" \"pnpm --filter admin start\""
+  },
 "devDependencies": {
 "concurrently": "^9.0.0"
 }
