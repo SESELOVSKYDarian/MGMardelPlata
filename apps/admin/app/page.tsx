@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-const API = process.env.NEXT_PUBLIC_API_URL!;
+const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 export default function Admin() {
   const [token, setToken] = useState<string>("");
