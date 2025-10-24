@@ -5,7 +5,7 @@
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
     "build": "tsc --project tsconfig.json",
-    "prisma": "prisma --schema ../../prisma/schema.prisma",
+    "prisma": "prisma",
     "seed": "tsx prisma/seed.ts"
   },
 "dependencies": {

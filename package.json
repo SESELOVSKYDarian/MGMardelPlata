@@ -4,8 +4,8 @@
   "packageManager": "pnpm@9.10.0",
 "scripts": {
 "dev": "concurrently -n web,admin,api -c blue,magenta,green \"pnpm --filter web dev\" \"pnpm --filter admin dev\" \"pnpm --filter api dev\"",
-"db:push": "pnpm --filter api run prisma db push",
-"db:seed": "pnpm --filter api run prisma db seed",
+    "db:push": "pnpm --filter api exec prisma db push",
+    "db:seed": "pnpm --filter api exec prisma db seed",
 "build": "pnpm -r build",
     "start": "concurrently -n api,web,admin -c green,blue,magenta \"pnpm --filter api start\" \"pnpm --filter web start\" \"pnpm --filter admin start\""
   },

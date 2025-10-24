@@ -56,7 +56,7 @@ Este monorepo contiene tres aplicaciones PNPM:
    ```
 
    El seed genera el usuario `admin@mgclone.local` con clave `admin123` y carga modelos, destacados y concesionarios de ejemplo.
-   Si Prisma reporta que no encuentra el schema asegurate de que el archivo `prisma/schema.prisma` exista en la raíz (los scripts ya lo referencian automáticamente).
+   Si Prisma reporta que no encuentra el schema verificá que exista `services/api/prisma/schema.prisma` (el archivo vive junto al proyecto de la API).
 
 4. **Levantar todo junto**
 
@@ -82,7 +82,7 @@ Este monorepo contiene tres aplicaciones PNPM:
 
 - **`"next" / "tsx" / "prisma" no se reconoce como un comando interno o externo**: indica que las dependencias no están instaladas. Ejecutá `pnpm install` en la raíz y luego repetí el comando (`pnpm dev`, `pnpm db:push`, etc.).
 - **`Local package.json exists, but node_modules missing, did you mean to install?`**: es el mismo caso anterior; asegurate de instalar dependencias antes de cualquier script.
-- **Base de datos no accesible**: revisá la variable `DATABASE_URL` y que PostgreSQL esté corriendo. Podés probar la conexión con `pnpm --filter api exec prisma db pull`.
+- **Base de datos no accesible**: revisá la variable `DATABASE_URL` y que PostgreSQL esté corriendo. Podés probar la conexión con `pnpm --filter api exec prisma db pull` (el CLI usa automáticamente `services/api/prisma/schema.prisma`).
 
 ## Notas adicionales
 
