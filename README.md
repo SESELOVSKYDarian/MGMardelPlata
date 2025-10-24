@@ -28,7 +28,7 @@ Este monorepo contiene tres aplicaciones PNPM:
 
 1. **Variables de entorno**
 
-   Copiá `.env.example` a `.env` en la raíz y ajustá los valores si es necesario. El archivo ya propone una base `mg_clone` en `localhost`:
+   Copiá `.env.example` a `.env` en la raíz y ajustá los valores si es necesario. El archivo ya propone una base `mg_clone` en `localhost` y es el que usan tanto las apps de Next.js como los comandos de Prisma (`pnpm db:push`, `pnpm db:seed`), así que asegurate de completarlo antes de ejecutar scripts:
 
    ```env
    DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/mg_clone?schema=public"
@@ -56,6 +56,7 @@ Este monorepo contiene tres aplicaciones PNPM:
    ```
 
    El seed genera el usuario `admin@mgclone.local` con clave `admin123` y carga modelos, destacados y concesionarios de ejemplo.
+   Los scripts leen automáticamente las variables desde el `.env` de la raíz; si Prisma reporta que falta `DATABASE_URL` revisá que hayas creado ese archivo.
    Si Prisma reporta que no encuentra el schema verificá que exista `services/api/prisma/schema.prisma` (el archivo vive junto al proyecto de la API).
 
 4. **Levantar todo junto**

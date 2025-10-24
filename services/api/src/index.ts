@@ -1,4 +1,10 @@
-import 'dotenv/config';
+import { config as loadEnv } from 'dotenv';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+loadEnv();
+const __dirname = dirname(fileURLToPath(import.meta.url));
+loadEnv({ path: resolve(__dirname, '../../.env'), override: false });
 import express, { type NextFunction, type Request, type Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
