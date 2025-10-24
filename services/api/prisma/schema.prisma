@@ -18,6 +18,7 @@ model CarModel {
   heroImageUrl String?
   gallery      Json?    // array de imágenes
   specs        Json?    // ficha técnica flexible
+  testDriveRequests TestDriveRequest[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -55,19 +56,24 @@ model Dealer {
 }
 
 model TestDriveRequest {
-  id        String   @id @default(cuid())
-  fullName  String
-  email     String
-  phone     String?
-  modelId   String
-  model     CarModel @relation(fields: [modelId], references: [id])
+  id          String   @id @default(cuid())
+  fullName    String
+  email       String
+  phone       String?
+  modelId     String
+  model       CarModel @relation(fields: [modelId], references: [id])
   prefersDate DateTime?
-  message   String?
-  status    TDStatus @default(PENDING)
-  createdAt DateTime @default(now())
+  message     String?
+  status      TDStatus @default(PENDING)
+  createdAt   DateTime @default(now())
 }
 
-enum TDStatus { PENDING, CONFIRMED, DONE, CANCELED }
+enum TDStatus {
+  PENDING
+  CONFIRMED
+  DONE
+  CANCELED
+}
 
 model News { // MG News / World
   id        String   @id @default(cuid())
@@ -96,3 +102,4 @@ model AdminUser {
   password  String   // hash bcrypt
   createdAt DateTime @default(now())
 }
+

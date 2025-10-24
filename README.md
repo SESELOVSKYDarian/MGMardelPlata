@@ -16,17 +16,18 @@ Este monorepo contiene tres aplicaciones PNPM:
 
 1. **Variables de entorno**
 
-   Copiá `.env.example` a `.env` en la raíz y ajustá los valores si es necesario. El archivo ya propone una base `mg_clone` en `localhost`:
+   Copiá `services/api/.env.example` a `services/api/.env` y ajustá los valores si es necesario. El archivo ya propone una base `mg_clone` en `localhost`:
 
    ```env
    DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/mg_clone?schema=public"
    PORT=4000
    JWT_SECRET="supersecretchange"
    CORS_ORIGIN="http://localhost:3000,http://localhost:3001"
-   NEXT_PUBLIC_API_URL="http://localhost:4000"
    ```
 
    > **Base de datos**: si usás PostgreSQL local bastará con crear la base `mg_clone` (`createdb mg_clone`). Podés cambiar el nombre en la URL si preferís otro.
+
+   > **Frontend**: los proyectos de Next.js ya tienen `http://localhost:4000` como valor por defecto para `NEXT_PUBLIC_API_URL`. Si necesitás otro dominio podés crear archivos `.env.local` dentro de `apps/web` y `apps/admin`.
 
 2. **Instalar dependencias**
 
