@@ -67,7 +67,12 @@ model TestDriveRequest {
   createdAt DateTime @default(now())
 }
 
-enum TDStatus { PENDING, CONFIRMED, DONE, CANCELED }
+enum TDStatus {
+  PENDING
+  CONFIRMED
+  DONE
+  CANCELED
+}
 
 model News { // MG News / World
   id        String   @id @default(cuid())
