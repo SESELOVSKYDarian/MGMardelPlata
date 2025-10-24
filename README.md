@@ -1,65 +1,52 @@
 # MG Argentina Clone Monorepo
 
-Este monorepo contiene tres aplicaciones PNPM:
+Este monorepo contiene tres aplicaciones manejadas con PNPM:
 
-- **services/api** – API Express + Prisma que expone autenticación y CRUD para modelos, destacados, concesionarios, noticias, campañas y solicitudes de test-drive.
+- **services/api** – API Express con datos en memoria para autenticación, modelos, destacados, concesionarios, noticias, campañas y solicitudes de test-drive.
 - **apps/web** – Front público en Next.js que consume la API.
-- **apps/admin** – Panel de administración simple en Next.js para editar contenido vía API.
+- **apps/admin** – Panel de administración en Next.js para editar contenido vía API.
 
 ## Requisitos
 
 - Node.js 20+
 - PNPM 9+
-- PostgreSQL 14+ (local o remoto)
 
-## Configuración paso a paso
+## Configuración rápida
 
-0. **Pre-requisitos del sistema**
+1. **Preparar PNPM**
 
-   - Instalá [Node.js 20 LTS](https://nodejs.org/).
-   - Activá PNPM con Corepack (incluido con Node 16+):
+   Activá PNPM con Corepack (incluido en Node 16+):
 
-     ```powershell
-     corepack enable
-     corepack prepare pnpm@9.10.0 --activate
-     ```
+   ```powershell
+   corepack enable
+   corepack prepare pnpm@9.10.0 --activate
+   ```
 
-     > En Windows podés ejecutar los comandos anteriores en PowerShell. Si preferís instalar PNPM de forma global, `npm install -g pnpm` también funciona.
+   > En Windows también podés instalar PNPM de forma global: `npm install -g pnpm`.
 
-1. **Variables de entorno**
+2. **Variables de entorno**
 
-   Copiá `.env.example` a `.env` en la raíz y ajustá los valores si es necesario. El archivo ya propone una base `mg_clone` en `localhost` y es el que usan tanto las apps de Next.js como los comandos de Prisma (`pnpm db:push`, `pnpm db:seed`), así que asegurate de completarlo antes de ejecutar scripts:
+   Copiá `.env.example` a `.env` en la raíz y ajustá los valores si es necesario:
 
    ```env
-   DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/mg_clone?schema=public"
    PORT=4000
-   JWT_SECRET="supersecretchange"
+   JWT_SECRET="cambiame-para-produccion"
    CORS_ORIGIN="http://localhost:3000,http://localhost:3001"
    NEXT_PUBLIC_API_URL="http://localhost:4000"
    ```
 
-   > **Base de datos**: si usás PostgreSQL local bastará con crear la base `mg_clone` (`createdb mg_clone`). Podés cambiar el nombre en la URL si preferís otro.
+   - `JWT_SECRET` se usa para firmar los tokens del panel de administración. Si la variable no está definida se utilizará un secreto de desarrollo por defecto.
+   - `CORS_ORIGIN` acepta una lista separada por comas con los orígenes autorizados para la API.
 
-2. **Instalar dependencias (obligatorio antes de cualquier script)**
+3. **Instalar dependencias**
 
    ```bash
    pnpm install
    ```
 
-   > Esto descarga `next`, `tsx`, `prisma` y el resto de binarios necesarios para que los comandos funcionen. Si ves errores del tipo `"next" no se reconoce como un comando interno o externo` o `"prisma" no se reconoce...`, asegurate de haber corrido `pnpm install` en la raíz del monorepo y de ejecutarlo nuevamente después de actualizar dependencias.
+   > Este paso descarga los binarios de `next`, `tsx`, etc. Si ves errores del estilo `"next" no se reconoce como un comando interno o externo`, asegurate de haber corrido `pnpm install` en la raíz.
 
-3. **Aplicar el esquema y seed**
-
-   ```bash
-   pnpm db:push
-   pnpm db:seed
-   ```
-
-   El seed genera el usuario `admin@mgclone.local` con clave `admin123` y carga modelos, destacados y concesionarios de ejemplo.
-   Los scripts leen automáticamente las variables desde el `.env` de la raíz; si Prisma reporta que falta `DATABASE_URL` revisá que hayas creado ese archivo.
-   Si Prisma reporta que no encuentra el schema verificá que exista `services/api/prisma/schema.prisma` (el archivo vive junto al proyecto de la API).
-
-4. **Levantar todo junto**
+4. **Levantar el entorno local**
 
    ```bash
    pnpm dev
@@ -69,26 +56,30 @@ Este monorepo contiene tres aplicaciones PNPM:
    - Web: http://localhost:3000
    - Admin: http://localhost:3001
 
-   El comando usa `concurrently` para orquestar los tres servicios; detenerlo con `Ctrl+C`.
+   El comando utiliza `concurrently` para orquestar los tres servicios; detenelo con `Ctrl+C`.
+
+5. **Credenciales de administración**
+
+   - Usuario: `admin@mgclone.local`
+   - Clave: `admin123`
+
+   Los datos de ejemplo (modelos, destacados, concesionarios) viven en memoria, por lo que se regeneran cada vez que se reinicia la API.
 
 ## Scripts útiles
 
 - `pnpm install` – instala/actualiza dependencias de todo el workspace.
-- `pnpm db:push` – sincroniza Prisma con la base configurada.
-- `pnpm db:seed` – carga datos demo.
+- `pnpm dev` – levanta API, web y admin en modo desarrollo.
 - `pnpm build` – compila los tres proyectos (web/admin via Next, API via `tsc`).
 - `pnpm start` – inicia API, web y admin en modo producción (requiere `pnpm build`).
 
 ## Solución de problemas comunes
 
-- **`"next" / "tsx" / "prisma" no se reconoce como un comando interno o externo**: indica que las dependencias no están instaladas. Ejecutá `pnpm install` en la raíz y luego repetí el comando (`pnpm dev`, `pnpm db:push`, etc.).
-- **`Local package.json exists, but node_modules missing, did you mean to install?`**: es el mismo caso anterior; asegurate de instalar dependencias antes de cualquier script.
-- **Base de datos no accesible**: revisá la variable `DATABASE_URL` y que PostgreSQL esté corriendo. Podés probar la conexión con `pnpm --filter api exec prisma db pull` (el CLI usa automáticamente `services/api/prisma/schema.prisma`).
+- **`"next" / "tsx" no se reconoce como un comando interno o externo`**: indica que las dependencias no están instaladas. Ejecutá `pnpm install` en la raíz y luego repetí el comando (`pnpm dev`, etc.).
+- **Los cambios desaparecen al reiniciar la API**: la API ahora utiliza un almacén en memoria para simplificar la configuración. Guardá la información importante en otro lugar o adaptá el store si necesitás persistencia.
 
 ## Notas adicionales
 
-- El front (`apps/web`) espera que la API responda en `NEXT_PUBLIC_API_URL` y hace fetch en server components sin cache.
-- La API valida inputs con Zod y protege endpoints de escritura con JWT. Recordá definir `JWT_SECRET` antes de levantarla.
+- El front (`apps/web`) espera que la API responda en `NEXT_PUBLIC_API_URL` y realiza fetch en server components sin cache.
 - El formulario de Test Drive consume `/models` para listar vehículos y envía solicitudes a `/test-drive`.
 
-¡Listo! Con estos pasos el proyecto queda funcionando y bastante cercano a https://mgargentina.ar, listo para que ajustes contenido e imágenes según necesites.
+¡Listo! Con estos pasos el proyecto queda funcionando sin dependencias de base de datos, listo para personalizar contenido e imágenes.
