@@ -18,6 +18,7 @@ model CarModel {
   heroImageUrl String?
   gallery      Json?    // array de imágenes
   specs        Json?    // ficha técnica flexible
+  testDriveRequests TestDriveRequest[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
