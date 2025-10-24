@@ -56,6 +56,7 @@ Este monorepo contiene tres aplicaciones PNPM:
    ```
 
    El seed genera el usuario `admin@mgclone.local` con clave `admin123` y carga modelos, destacados y concesionarios de ejemplo.
+   Si Prisma reporta que no encuentra el schema asegurate de que el archivo `prisma/schema.prisma` exista en la raíz (los scripts ya lo referencian automáticamente).
 
 4. **Levantar todo junto**
 
