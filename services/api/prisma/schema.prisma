@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CarModel {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  fuelType     FuelType
+  isNew        Boolean  @default(false)
+  priceFromUsd Int?
+  teaser       String?  // Ej: "Full Hybrid con hasta 43,5 Km/L"
+  heroImageUrl String?
+  gallery      Json?    // array de imágenes
+  specs        Json?    // ficha técnica flexible
+  testDriveRequests TestDriveRequest[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum FuelType {
+  HYBRID
+  ELECTRIC
+  GASOLINE
+}
+
+model Highlight { // Cards de destacados del home
+  id           String   @id @default(cuid())
+  title        String
+  subtitle     String?
+  ctaLabel     String?  // "Cotizar", "Reservar"
+  ctaHref      String?
+  badge        String?  // "NUEVO", "Eléctrico", etc.
+  fuelFilter   FuelType?
+  imageUrl     String?
+  order        Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Dealer {
+  id        String   @id @default(cuid())
+  name      String
+  city      String
+  phone     String?
+  address   String?
+  lat       Float?
+  lng       Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TestDriveRequest {
+  id          String   @id @default(cuid())
+  fullName    String
+  email       String
+  phone       String?
+  modelId     String
+  model       CarModel @relation(fields: [modelId], references: [id])
+  prefersDate DateTime?
+  message     String?
+  status      TDStatus @default(PENDING)
+  createdAt   DateTime @default(now())
+}
+
+enum TDStatus {
+  PENDING
+  CONFIRMED
+  DONE
+  CANCELED
+}
+
+model News { // MG News / World
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  excerpt   String?
+  coverUrl  String?
+  content   Json? // blocks (portable text / mdx)
+  published Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Campaign { // Campañas y Recall
+  id        String   @id @default(cuid())
+  title     String
+  content   Json?
+  linkUrl   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // hash bcrypt
+  createdAt DateTime @default(now())
+}
+
